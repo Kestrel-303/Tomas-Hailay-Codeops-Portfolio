@@ -1,28 +1,45 @@
-# A function that checks and lables temprature
-def temp_lbl (temp):
-    if temp < 15:
-        print(f"{temp} is cold")
-    elif temp >= 15 and temp < 28:
-        print(f"{temp} is warm")
-    else:
-        print(f"{temp} is hot")
+#  Unique cities
+cities = ["Addis", "Bahir Dar", "Addis", "Hawassa", "Bahir Dar", "Mekelle"]
+unique_cities = set(cities)
+print(unique_cities)
+print(len(unique_cities))
 
-def Reciept_loop():
-    for rpt in range(1,11):
-        print(f'Recipt number {rpt}\n')
+#  Price report
+groceries = {
+    "injera": 50,
+    "coffee": 120,
+    "sugar": 80,
+    "oil": 350,
+    "teff": 200,
+}
+for item, price in groceries.items():
+    print(f"{item}: {price} ETB")
 
+# Tax comprehension
+prices = [100, 250, 400, 80]
+with_tax = [p * 1.15 for p in prices]
+print(with_tax)
 
-def Even_check(num):
-    if num % 2 == 0:
-        print(f"The number {num} is even")
-    elif num % 2 != 0:
-        print(f"The number {num} is not even")
+# Cheap items
+cheap = [p for p in prices if p < 200]
+print(cheap)
 
-def apply_discount(price, percent=10):
-    percent_in_decimal = float(percent / 100)
-    discount_price = price * percent_in_decimal
-    new_price = price - discount_price
+# Write & read
+with open("names.txt", "w") as file:
+    file.write("Abebe\n")
+    file.write("Sara\n")
+    file.write("Daniel\n")
 
-    print(f"The discont price is {new_price}")
-apply_discount(7000)
+with open("names.txt", "r") as file:
+    for name in file:
+        print(name.strip())
 
+# Safe division
+try:
+    number = float(input("Enter a denominator: "))
+    result = 1000 / number
+    print(result)
+except ValueError:
+    print("Not a valid number.")
+except ZeroDivisionError:
+    print("Cannot divide by zero.")
