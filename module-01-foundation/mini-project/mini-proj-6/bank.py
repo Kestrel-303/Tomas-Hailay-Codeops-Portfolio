@@ -1,6 +1,3 @@
-# Day 06 Mini-Project - Addis Bank System
-# Using SOLID and Design Patterns (Simple Version)
-
 from abc import ABC, abstractmethod
 
 # 1. Singleton Pattern - One config for the whole bank
