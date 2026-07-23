@@ -49,7 +49,7 @@ class CheckingAccount(Account):
     def get_type(self):
         return "Checking Account"
 
-class AccountFactory:
+class AccountRegistory:
     @staticmethod
     def create(type_name, owner, balance=0):
         if type_name == "savings":
@@ -83,7 +83,7 @@ def main():
     config = BankConfig()
     
     # Day 06 part
-    acc1 = AccountFactory.create("savings", "Almaz Bekele", 800)
+    acc1 = AccountRegistory.create("savings", "Almaz Bekele", 800)
     acc1.attach(SMSNotifier())
     
     acc1.deposit(400)
