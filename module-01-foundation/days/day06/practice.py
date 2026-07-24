@@ -33,7 +33,7 @@ saver.save(report, "quarterly_summary.txt")
 emailer.send_email(report, "manager@example.com")
 print()
 
-
+## 2. OCP - Open/Closed Principle
 class Shape(ABC):
     @abstractmethod
     def area(self) -> float:
@@ -76,6 +76,7 @@ for shape in shapes:
     print_area(shape)
 print()
 
+## 3. Singleton Pattern
 class AppSettings:
     _instance = None
 
@@ -94,6 +95,7 @@ print(f"app1.currency: {app1.currency}")
 print(f"app2.currency: {app2.currency}")
 print(f"app1 is app2: {app1 is app2}")
 
+## 4. Factory Pattern
 class ShapeFactory:
     @staticmethod
     def create(kind: str, **kwargs) -> Shape:
@@ -114,6 +116,62 @@ triangle = ShapeFactory.create("triangle", base=4, height=8)
 
 for shape in [circle, square, triangle]:
     print(f"Factory created {shape.__class__.__name__} with Area: {shape.area():.2f}")
-print()
 
+## 5. Observer Pattern
+class Subscriber(ABC):
+    @abstractmethod
+    def update(self, news: str):
+        pass
+
+
+class TVChannel(Subscriber):
+    def __init__(self, channel_name: str):
+        self.channel_name = channel_name
+
+    def update(self, news: str):
+        print(f"[{self.channel_name}] Broadcasting News: {news}")
+
+
+class MobileAppUser(Subscriber):
+    def __init__(self, username: str):
+        self.username = username
+
+    def update(self, news: str):
+        print(f"[Mobile Alert for {self.username}]: {news}")
+
+
+class NewsAgency:
+    def __init__(self):
+        self._subscribers = []
+        self._latest_news = ""
+
+    def attach(self, subscriber: Subscriber):
+        if subscriber not in self._subscribers:
+            self._subscribers.append(subscriber)
+
+    def detach(self, subscriber: Subscriber):
+        if subscriber in self._subscribers:
+            self._subscribers.remove(subscriber)
+
+    def notify(self):
+        for subscriber in self._subscribers:
+            subscriber.update(self._latest_news)
+
+    def add_news(self, news: str):
+        print(f"[NewsAgency] Publishing: '{news}'")
+        self._latest_news = news
+        self.notify()
+
+
+
+print("--- 5. Observer Pattern ---")
+agency = NewsAgency()
+
+tv = TVChannel("ETV News")
+mobile = MobileAppUser("Abebe")
+
+agency.attach(tv)
+agency.attach(mobile)
+
+agency.add_news("Tech Conference scheduled in Addis Ababa!")
 
