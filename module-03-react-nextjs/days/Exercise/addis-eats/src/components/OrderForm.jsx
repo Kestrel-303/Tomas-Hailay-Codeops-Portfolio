@@ -14,29 +14,25 @@ function handeleChange(e){
             [name]: value,
         })
     }
-
+const isValid = !/^\d{10}$/.test(form.phone)
 function handleSubmit(e){
     e.preventDefault();
+    alert(`Delivery on the way for ${form.name}`)
 
-    if (!/^\d{10}$/.test(form.phone)){
-            alert("Invalid phone")
-    }
-
-    console.log(form);
-    alert("Submitted");
 }
 
   return (
     <div>
-        <h2>Customer information</h2>
+        <h2>Delivery Details</h2>
         <form onSubmit={handleSubmit}>
-        <label>Name: </label>
+        <label>Full-name: </label>
         <input
         name='name' 
         type="text"
         value={form.name}
         onChange={handeleChange}
         placeholder='Your Name'
+        required
         />
         <br />
         <label>Phone: </label>
@@ -46,16 +42,17 @@ function handleSubmit(e){
         value={form.price}
         onChange={handeleChange}
         placeholder='Your Phone'
+        required
         />
         <br />
        <select name='area' value={form.area} onChange={handeleChange}>
+        <option value="Ayat">Ayat</option>
         <option value="Summit">Summit</option>
         <option value="Gerji">Gerji</option>
-        <option value="Ayat">Ayat</option>
         <option value="Bole">Bole</option>
        </select>
        <br />
-       <button type='submit'>Submit</button>
+       <button type='submit' disabled= {isValid}>Submit</button>
         </form>
         
     </div>
