@@ -85,3 +85,8 @@ footer{
     padding: 0.09rem;
     border: 0.5px solid white;
 }
+
+.load{
+  text-align: center;
+  color: azure;
+}

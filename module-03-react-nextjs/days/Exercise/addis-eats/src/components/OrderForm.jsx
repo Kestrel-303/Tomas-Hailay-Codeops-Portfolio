@@ -4,7 +4,7 @@ function OrderForm() {
     const [form, setForm] = useState({
         name: "",
         phone: "",
-        area: "Summit   ",
+        area: "Summit",
     });
 
 function handeleChange(e){
