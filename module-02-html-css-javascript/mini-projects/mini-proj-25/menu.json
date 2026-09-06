@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "name": "Doro Wat",
+    "category": "Main",
+    "price": 350
+  },
+  {
+    "id": 2,
+    "name": "Shiro Tegabino",
+    "category": "Vegetarian",
+    "price": 180
+  },
+  {
+    "id": 3,
+    "name": "Special Kitfo",
+    "category": "Main",
+    "price": 420
+  },
+  {
+    "id": 4,
+    "name": "Beyaynetu",
+    "category": "Vegetarian",
+    "price": 220
+  },
+  {
+    "id": 5,
+    "name": "Beef Tibs",
+    "category": "Main",
+    "price": 380
+  },
+  {
+    "id": 6,
+    "name": "Chechebsa",
+    "category": "Breakfast",
+    "price": 160
+  }
+]
