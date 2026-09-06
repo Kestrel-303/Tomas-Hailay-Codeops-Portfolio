@@ -1,6 +1,5 @@
-/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useReducer, useMemo } from "react";
-import { cartReducer } from "./cartReducer";
+import { cartReducer } from "../hook/cartReducer";
 
 export const CartContext = createContext(null);
 
