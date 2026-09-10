@@ -1,0 +1,9 @@
+.status-message {
+  padding: var(--space-8) 0;
+  color: var(--color-ink-soft);
+  font-size: 0.95rem;
+}
+
+.status-message--error {
+  color: var(--color-danger);
+}
