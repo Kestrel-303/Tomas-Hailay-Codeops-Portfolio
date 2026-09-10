@@ -1,0 +1,30 @@
+.home-hero {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  background: radial-gradient(circle at 50% 30%, var(--color-bg-elevated), var(--color-bg));
+}
+
+.home-hero__inner {
+  text-align: center;
+  max-width: 640px;
+}
+
+.home-hero__eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-gold-dark);
+  margin-bottom: var(--space-4);
+}
+
+.home-hero__title {
+  font-size: clamp(2.75rem, 6vw, 4.5rem);
+  margin-bottom: var(--space-4);
+}
+
+.home-hero__subtitle {
+  color: var(--color-ink-soft);
+  margin-bottom: var(--space-8);
+  font-size: 1.05rem;
+}
