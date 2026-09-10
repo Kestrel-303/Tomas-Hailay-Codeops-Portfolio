@@ -1,4 +1,6 @@
 import { NavLink } from "react-router-dom";
+import { useCartStore } from "../../stores/useCartStore";
+import { useWishlistStore } from "../../stores/useWishlistStore";
 import "./Header.css";
 
 const NAV_LINKS = [
@@ -8,6 +10,9 @@ const NAV_LINKS = [
 ];
 
 export default function Header() {
+  const wishlistCount = useWishlistStore((state) => state.items.length);
+  const cartCount = useCartStore((state) => state.items.reduce((sum, item) => sum + item.quantity, 0));
+
   return (
     <header className="site-header">
       <div className="container site-header__row">
@@ -36,9 +41,11 @@ export default function Header() {
         <div className="site-header__actions">
           <NavLink to="/wishlist" className="site-header__icon" aria-label="Wishlist">
             ♡
+            {wishlistCount > 0 && <span className="site-header__badge">{wishlistCount}</span>}
           </NavLink>
           <NavLink to="/cart" className="site-header__icon" aria-label="Cart">
             🛍
+            {cartCount > 0 && <span className="site-header__badge">{cartCount}</span>}
           </NavLink>
         </div>
       </div>
