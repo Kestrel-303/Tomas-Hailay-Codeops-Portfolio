@@ -68,6 +68,12 @@ export default function Cart() {
             <span>Subtotal</span>
             <span className="cart-summary__total">${total.toFixed(2)}</span>
           </div>
+
+          <div className="cart-checkout">
+            <Link to="/checkout" className="btn btn-solid">
+              Proceed to Checkout
+            </Link>
+          </div>
         </div>
       )}
     </section>
