@@ -92,6 +92,12 @@
   color: var(--color-gold-dark);
 }
 
+.cart-checkout {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--space-4);
+}
+
 @media (max-width: 640px) {
   .cart-item {
     grid-template-columns: 60px 1fr;

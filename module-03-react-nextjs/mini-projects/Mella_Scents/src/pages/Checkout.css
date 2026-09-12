@@ -1,0 +1,28 @@
+.checkout-page {
+  max-width: 520px;
+}
+
+.checkout-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  margin-top: var(--space-8);
+}
+
+.checkout-form textarea {
+  resize: vertical;
+}
+
+.checkout-form__server-error {
+  color: var(--color-danger);
+  font-size: 0.85rem;
+}
+
+.checkout-form button[type="submit"] {
+  align-self: flex-start;
+}
+
+.checkout-form button[type="submit"]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

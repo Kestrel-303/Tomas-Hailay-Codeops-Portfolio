@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { useCartStore } from "../../stores/useCartStore";
 import { useWishlistStore } from "../../stores/useWishlistStore";
+import { useAuth } from "../../context/AuthContext";
 import "./Header.css";
 
 const NAV_LINKS = [
@@ -12,6 +13,7 @@ const NAV_LINKS = [
 export default function Header() {
   const wishlistCount = useWishlistStore((state) => state.items.length);
   const cartCount = useCartStore((state) => state.items.reduce((sum, item) => sum + item.quantity, 0));
+  const { isAuthenticated, user } = useAuth();
 
   return (
     <header className="site-header">
@@ -46,6 +48,12 @@ export default function Header() {
           <NavLink to="/cart" className="site-header__icon" aria-label="Cart">
             🛍
             {cartCount > 0 && <span className="site-header__badge">{cartCount}</span>}
+          </NavLink>
+          <NavLink
+            to={isAuthenticated ? "/account" : "/login"}
+            className="site-header__account"
+          >
+            {isAuthenticated ? user.name : "Sign In"}
           </NavLink>
         </div>
       </div>
