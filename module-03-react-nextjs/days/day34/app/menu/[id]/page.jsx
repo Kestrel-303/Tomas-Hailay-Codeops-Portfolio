@@ -35,7 +35,7 @@ export default async function DishPage({ params }) {
         </div>
       </div>
 
-      <AddToCartButton dishName={dish.name} />
+      <AddToCartButton dish={dish} />
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useCart } from "../lib/cart-context";
 
 const links = [
   { href: "/home", label: "Home" },
@@ -12,6 +13,7 @@ const links = [
 export default function NavBar() {
   const router = useRouter();
   const pathname = usePathname();
+  const { itemCount } = useCart();
 
   return (
     <header className="navbar">
@@ -25,7 +27,8 @@ export default function NavBar() {
 
         <nav className="nav-links" aria-label="Primary">
           {links.map((link) => {
-            const isActive = pathname === link.href || (link.href === "/menu" && pathname.startsWith("/menu"));
+            const isActive =
+              pathname === link.href || (link.href === "/menu" && pathname.startsWith("/menu"));
             return (
               <Link
                 key={link.href}
@@ -34,6 +37,7 @@ export default function NavBar() {
                 aria-current={isActive ? "page" : undefined}
               >
                 {link.label}
+                {link.href === "/cart" && itemCount > 0 && <span className="nav-badge">{itemCount}</span>}
               </Link>
             );
           })}
