@@ -10,7 +10,7 @@ export default function AddToCartButton({ dishName }) {
   }
 
   return (
-    <button type="button" onClick={handleAddToCart}>
+    <button type="button" className="btn btn-primary btn-block" onClick={handleAddToCart}>
       Add {dishName} to cart
     </button>
   );
