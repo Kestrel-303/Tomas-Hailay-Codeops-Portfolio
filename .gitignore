@@ -23,3 +23,7 @@ coverage/
 # OS
 .DS_Store
 Thumbs.db
+
+# AI agent files
+AGENTS.md
+CLAUDE.md
