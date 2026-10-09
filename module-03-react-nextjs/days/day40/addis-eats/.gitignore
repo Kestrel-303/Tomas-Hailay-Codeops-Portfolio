@@ -1,0 +1,7 @@
+node_modules/
+.next/
+*.log
+# Real secrets live in .env and any .env*.local (local, development, staging, ...).
+# .env.example is the committed template and holds no values.
+.env
+.env*.local
