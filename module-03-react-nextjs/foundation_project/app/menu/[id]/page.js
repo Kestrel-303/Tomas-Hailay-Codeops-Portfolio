@@ -22,11 +22,25 @@ export const dynamicParams = false;
 // price for more than an hour.
 export const revalidate = 3600;
 
-export async function generateMetadata({ params }) {
+export async function generateMetadata({ params }, parent) {
   const { id } = await params;
   const dish = await getDish(id);
   if (!dish) return { title: 'Dish not found' };
-  return { title: dish.name, description: dish.description };
+  // Metadata objects merge shallowly: setting openGraph/twitter here would drop the site card
+  // inherited from app/opengraph-image.js, so its images are passed through explicitly.
+  const inherited = await parent;
+  return {
+    title: dish.name,
+    description: dish.description,
+    alternates: { canonical: `/menu/${dish.id}` },
+    openGraph: {
+      title: `${dish.name} · Addis Eats`,
+      description: dish.description,
+      url: `/menu/${dish.id}`,
+      images: inherited.openGraph?.images ?? [],
+    },
+    twitter: { card: 'summary_large_image', images: inherited.twitter?.images ?? [] },
+  };
 }
 
 export default async function DishPage({ params }) {

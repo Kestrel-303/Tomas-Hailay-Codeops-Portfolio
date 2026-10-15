@@ -6,7 +6,9 @@ import 'server-only';
 function required(name) {
   const value = process.env[name];
   if (!value || value.length < 32) {
-    throw new Error(`${name} must be set in .env.local (at least 32 characters). See .env.example.`);
+    throw new Error(
+      `${name} is missing or shorter than 32 characters. Locally: .env.local (see .env.example). On Vercel: Settings → Environment Variables, a separate value for Production and for Preview.`,
+    );
   }
   return value;
 }

@@ -9,7 +9,12 @@ import DishFilter from './DishFilter';
 // on the client by DishFilter — so it stays prerendered.
 export const revalidate = 3600;
 
-export const metadata = { title: 'Menu' };
+export const metadata = {
+  title: 'Menu',
+  description: 'The full Addis Eats menu: doro wat, kitfo, shiro, tibs, breakfast, drinks and desserts, with prices in ETB.',
+  // The filters live in the query string; every variant is the same page for search engines.
+  alternates: { canonical: '/menu' },
+};
 
 export default async function MenuPage() {
   const dishes = await getDishes();

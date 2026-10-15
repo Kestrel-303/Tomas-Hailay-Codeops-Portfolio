@@ -1120,3 +1120,65 @@ main {
     padding: 2rem 1.25rem;
   }
 }
+
+/* ===== Final: touch targets (every control at least 44 × 44 CSS px) ===== */
+
+.skip-link,
+.brand,
+.nav a,
+.category-btn,
+.link-back,
+.btn,
+.btn--sm,
+.remove-btn,
+.cart-item__info a,
+.checkout-form input,
+.checkout-form select,
+.checkout-form textarea,
+.toolbar input,
+.toolbar select {
+  min-height: 44px;
+}
+
+.skip-link,
+.brand,
+.nav a,
+.category-btn,
+.link-back,
+.remove-btn,
+.cart-item__info a {
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn,
+.btn--sm {
+  min-width: 44px;
+  justify-content: center;
+}
+
+/* The dish name on a card is its link to the dish page. */
+.dish-card__title {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.wish-btn,
+.qty-stepper button {
+  width: 44px;
+  height: 44px;
+}
+
+/* Count badges and tags: never below 12px. */
+.badge {
+  min-width: 1.4rem;
+  height: 1.4rem;
+  font-size: 0.75rem;
+}
+
+/* Short nav labels ("Menu") still get a 44px-wide target. */
+.nav a {
+  min-width: 44px;
+  justify-content: center;
+}

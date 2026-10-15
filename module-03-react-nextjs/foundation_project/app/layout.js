@@ -1,12 +1,18 @@
 import Link from 'next/link';
 import Providers from '@/components/Providers';
 import NavLinks from '@/components/NavLinks';
+import { SITE_NAME, SITE_URL } from '@/lib/site';
 import './globals.css';
 
 export const metadata = {
+  // Absolute URLs for link cards, canonical links and the sitemap (lib/site.js).
+  metadataBase: new URL(SITE_URL),
   title: { default: 'Addis Eats', template: '%s · Addis Eats' },
   description: 'Authentic Ethiopian dishes made fresh in Bole, Addis Ababa — order online and pay with TeleBirr.',
   icons: { icon: '/favicon.svg' },
+  // og:image and twitter:image come from app/opengraph-image.js.
+  openGraph: { type: 'website', siteName: SITE_NAME, locale: 'en_ET' },
+  twitter: { card: 'summary_large_image' },
 };
 
 // Root layout: a server component. It reads no cookies or headers — doing so here
