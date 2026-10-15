@@ -1,0 +1,216 @@
+{
+  "source": "https://dummyjson.com/products/category/fragrances",
+  "fetchedAt": "2026-10-15T19:44:54.030Z",
+  "products": [
+    {
+      "id": 6,
+      "title": "Calvin Klein CK One",
+      "brand": "Calvin Klein",
+      "description": "CK One by Calvin Klein is a classic unisex fragrance, known for its fresh and clean scent. It's a versatile fragrance suitable for everyday wear.",
+      "priceUsd": 49.99,
+      "rating": 4.37,
+      "stock": 29,
+      "tags": [
+        "fragrances",
+        "perfumes"
+      ],
+      "sku": "FRA-CAL-CAL-006",
+      "warranty": "1 week warranty",
+      "shipping": "Ships overnight",
+      "returnPolicy": "90 days return policy",
+      "remoteImages": [
+        "https://cdn.dummyjson.com/product-images/fragrances/calvin-klein-ck-one/1.webp",
+        "https://cdn.dummyjson.com/product-images/fragrances/calvin-klein-ck-one/2.webp",
+        "https://cdn.dummyjson.com/product-images/fragrances/calvin-klein-ck-one/3.webp"
+      ],
+      "reviews": [
+        {
+          "rating": 2,
+          "comment": "Very disappointed!",
+          "date": "2025-04-30T09:41:02.053Z",
+          "name": "Layla Young"
+        },
+        {
+          "rating": 4,
+          "comment": "Fast shipping!",
+          "date": "2025-04-30T09:41:02.053Z",
+          "name": "Daniel Cook"
+        },
+        {
+          "rating": 3,
+          "comment": "Not as described!",
+          "date": "2025-04-30T09:41:02.053Z",
+          "name": "Jacob Cooper"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Chanel Coco Noir Eau De",
+      "brand": "Chanel",
+      "description": "Coco Noir by Chanel is an elegant and mysterious fragrance, featuring notes of grapefruit, rose, and sandalwood. Perfect for evening occasions.",
+      "priceUsd": 129.99,
+      "rating": 4.26,
+      "stock": 58,
+      "tags": [
+        "fragrances",
+        "perfumes"
+      ],
+      "sku": "FRA-CHA-CHA-007",
+      "warranty": "3 year warranty",
+      "shipping": "Ships overnight",
+      "returnPolicy": "No return policy",
+      "remoteImages": [
+        "https://cdn.dummyjson.com/product-images/fragrances/chanel-coco-noir-eau-de/1.webp",
+        "https://cdn.dummyjson.com/product-images/fragrances/chanel-coco-noir-eau-de/2.webp",
+        "https://cdn.dummyjson.com/product-images/fragrances/chanel-coco-noir-eau-de/3.webp"
+      ],
+      "reviews": [
+        {
+          "rating": 4,
+          "comment": "Highly impressed!",
+          "date": "2025-04-30T09:41:02.053Z",
+          "name": "Ruby Andrews"
+        },
+        {
+          "rating": 5,
+          "comment": "Awesome product!",
+          "date": "2025-04-30T09:41:02.053Z",
+          "name": "Leah Henderson"
+        },
+        {
+          "rating": 5,
+          "comment": "Very happy with my purchase!",
+          "date": "2025-04-30T09:41:02.053Z",
+          "name": "Xavier Wright"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Dior J'adore",
+      "brand": "Dior",
+      "description": "J'adore by Dior is a luxurious and floral fragrance, known for its blend of ylang-ylang, rose, and jasmine. It embodies femininity and sophistication.",
+      "priceUsd": 89.99,
+      "rating": 3.8,
+      "stock": 98,
+      "tags": [
+        "fragrances",
+        "perfumes"
+      ],
+      "sku": "FRA-DIO-DIO-008",
+      "warranty": "1 week warranty",
+      "shipping": "Ships in 2 weeks",
+      "returnPolicy": "7 days return policy",
+      "remoteImages": [
+        "https://cdn.dummyjson.com/product-images/fragrances/dior-j'adore/1.webp",
+        "https://cdn.dummyjson.com/product-images/fragrances/dior-j'adore/2.webp",
+        "https://cdn.dummyjson.com/product-images/fragrances/dior-j'adore/3.webp"
+      ],
+      "reviews": [
+        {
+          "rating": 5,
+          "comment": "Great value for money!",
+          "date": "2025-04-30T09:41:02.053Z",
+          "name": "Nicholas Bailey"
+        },
+        {
+          "rating": 4,
+          "comment": "Great value for money!",
+          "date": "2025-04-30T09:41:02.053Z",
+          "name": "Penelope Harper"
+        },
+        {
+          "rating": 4,
+          "comment": "Great product!",
+          "date": "2025-04-30T09:41:02.053Z",
+          "name": "Emma Miller"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Dolce Shine Eau de",
+      "brand": "Dolce & Gabbana",
+      "description": "Dolce Shine by Dolce & Gabbana is a vibrant and fruity fragrance, featuring notes of mango, jasmine, and blonde woods. It's a joyful and youthful scent.",
+      "priceUsd": 69.99,
+      "rating": 3.96,
+      "stock": 4,
+      "tags": [
+        "fragrances",
+        "perfumes"
+      ],
+      "sku": "FRA-DOL-DOL-009",
+      "warranty": "3 year warranty",
+      "shipping": "Ships in 1 month",
+      "returnPolicy": "7 days return policy",
+      "remoteImages": [
+        "https://cdn.dummyjson.com/product-images/fragrances/dolce-shine-eau-de/1.webp",
+        "https://cdn.dummyjson.com/product-images/fragrances/dolce-shine-eau-de/2.webp",
+        "https://cdn.dummyjson.com/product-images/fragrances/dolce-shine-eau-de/3.webp"
+      ],
+      "reviews": [
+        {
+          "rating": 4,
+          "comment": "Would buy again!",
+          "date": "2025-04-30T09:41:02.053Z",
+          "name": "Mateo Bennett"
+        },
+        {
+          "rating": 4,
+          "comment": "Highly recommended!",
+          "date": "2025-04-30T09:41:02.053Z",
+          "name": "Nolan Gonzalez"
+        },
+        {
+          "rating": 5,
+          "comment": "Very happy with my purchase!",
+          "date": "2025-04-30T09:41:02.053Z",
+          "name": "Aurora Lawson"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Gucci Bloom Eau de",
+      "brand": "Gucci",
+      "description": "Gucci Bloom by Gucci is a floral and captivating fragrance, with notes of tuberose, jasmine, and Rangoon creeper. It's a modern and romantic scent.",
+      "priceUsd": 79.99,
+      "rating": 2.74,
+      "stock": 91,
+      "tags": [
+        "fragrances",
+        "perfumes"
+      ],
+      "sku": "FRA-GUC-GUC-010",
+      "warranty": "6 months warranty",
+      "shipping": "Ships overnight",
+      "returnPolicy": "No return policy",
+      "remoteImages": [
+        "https://cdn.dummyjson.com/product-images/fragrances/gucci-bloom-eau-de/1.webp",
+        "https://cdn.dummyjson.com/product-images/fragrances/gucci-bloom-eau-de/2.webp",
+        "https://cdn.dummyjson.com/product-images/fragrances/gucci-bloom-eau-de/3.webp"
+      ],
+      "reviews": [
+        {
+          "rating": 1,
+          "comment": "Very dissatisfied!",
+          "date": "2025-04-30T09:41:02.053Z",
+          "name": "Cameron Perez"
+        },
+        {
+          "rating": 5,
+          "comment": "Very happy with my purchase!",
+          "date": "2025-04-30T09:41:02.053Z",
+          "name": "Daniel Cook"
+        },
+        {
+          "rating": 4,
+          "comment": "Highly impressed!",
+          "date": "2025-04-30T09:41:02.053Z",
+          "name": "Addison Wright"
+        }
+      ]
+    }
+  ]
+}
