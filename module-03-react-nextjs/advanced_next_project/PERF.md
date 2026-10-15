@@ -63,8 +63,32 @@ Those measurements used a stricter custom setup (DevTools-applied throttling), s
 | Every `<img>` → `next/image` with real `width`/`height` and `sizes` | Home page weight **2,239 KB → 378 KB**. The hero went from a 1.2 MB JPEG to a 51 KB WebP on phones. |
 | Google Fonts `@import` → `next/font` (Outfit; an unused second font dropped) | CLS **0.016 → 0**, TBT −175 ms, no requests to Google |
 | Blocking third-party `<script>` → `next/script lazyOnload` | No longer on the critical path. With the CDN 5 s slow, first paint went from 5.4 s to 0.3 s. |
-| Remote image host pinned in `remotePatterns` | Unlisted hosts and other folders get 400, so `/_next/image` isn't an open proxy |
+| No remote images at all (final version) | The hero moved into `public/images` after Wikimedia answered the optimizer with 429s; `next.config.mjs` has no `remotePatterns`, so `/_next/image` refuses every remote URL |
 
 ## Bundle check
 
 Every file in `.next/static` was searched after the final build. None contains the `SESSION_SECRET` value, demo passwords, password hashes, `scryptSync`, `createHmac` or `ownerId`, and no variable uses `NEXT_PUBLIC_`.
+
+## Final build (after merging mini-projects 18–20)
+
+The final app adds the staff dashboard (Recharts, staff-only), live tracking (Leaflet, loaded with `ssr: false` only on `/orders/[id]`), `lib/format.js`, the phone menu and the keyboard/touch fixes. Two things were checked.
+
+**Did the public pages get heavier?**
+- The home page loads 11 scripts, 187 KB gzipped. Recharts and Leaflet aren't among them: they're only in the staff dashboard and tracking page chunks.
+- CLS is **0** on `/`, `/menu` and `/menu/doro-wat`.
+- The hero moved from hotlinked Wikimedia to `public/images/hero-injera.jpg` (a 2400px, 582 KB copy, which next/image serves resized as WebP/AVIF). That was a fix, not a speed choice: Wikimedia had refused 13 of the optimizer's 15 size requests with **429 Too Many Requests**, which left a broken hero on wide screens.
+
+**Lighthouse, re-run (standard mobile, 3-run medians, 15 Oct 2026):**
+
+| Page | Final app | Control: mini-project 17, same machine, same hour |
+|---|---|---|
+| `/` | 73 (LCP 3.4 s, TBT 0.77 s, CLS 0) | — |
+| `/menu` | 62 (LCP 3.4 s, TBT 1.5 s, CLS 0) | **62** (LCP 3.5 s, TBT 1.6 s) |
+| `/menu/doro-wat` | 69 (LCP 3.1 s, TBT 1.2 s, CLS 0) | — |
+
+These are well below the 92–93 in the table at the top, but the control explains why:
+- **The unchanged mini-project 17 menu scored the same 62 under the same conditions.** Its code is what scored 92–93 before.
+- The machine was under heavy background load during the run (WPS Office, CrossDeviceService and several Chrome processes were the top CPU users). Lighthouse's simulated throttling multiplies whatever the CPU is already doing, so Total Blocking Time rose for both builds alike.
+- So the drop is the measuring machine, not a regression in the code.
+
+**To get a fair final number:** run Lighthouse against the deployed URL (PageSpeed Insights runs it on Google's servers), or locally with nothing else running and the laptop plugged in.

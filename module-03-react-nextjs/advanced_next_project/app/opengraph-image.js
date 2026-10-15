@@ -1,3 +1,5 @@
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
 import { ImageResponse } from 'next/og';
 
 // The site-wide link preview (1200×630), used by every page that doesn't make its own.
@@ -7,16 +9,14 @@ export const alt = 'Addis Eats: a fasting platter of stews and greens on injera,
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
-// The home page's hero photo (Wikimedia Commons, CC BY-SA 2.0), at a 1280px width so the
-// renderer doesn't have to decode the 6016px original. The credit is printed on the card.
-const PHOTO =
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Injera%2C_Fasting_Food%2C_Ethiopia_%2811286899826%29.jpg/1280px-Injera%2C_Fasting_Food%2C_Ethiopia_%2811286899826%29.jpg';
-
+// The home page's hero photo (Wikimedia Commons, CC BY-SA 2.0; the credit is printed on the card),
+// read from a 1280px copy in public/images, like the dish cards do. It used to be fetched from
+// upload.wikimedia.org at build time, which answered 429 Too Many Requests often enough that the
+// card could silently lose its photo.
 async function loadPhoto() {
   try {
-    const res = await fetch(PHOTO, { headers: { 'User-Agent': 'AddisEats/1.0 (link preview)' } });
-    if (!res.ok) return null;
-    return `data:image/jpeg;base64,${Buffer.from(await res.arrayBuffer()).toString('base64')}`;
+    const file = await readFile(join(process.cwd(), 'public', 'images', 'hero-injera-1280.jpg'));
+    return `data:image/jpeg;base64,${file.toString('base64')}`;
   } catch {
     return null; // still produce a card, just without the photo
   }

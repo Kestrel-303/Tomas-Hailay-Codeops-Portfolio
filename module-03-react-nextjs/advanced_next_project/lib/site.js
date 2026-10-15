@@ -1,14 +1,15 @@
-// The site's public address, used for metadataBase, canonical URLs, the sitemap and JSON-LD,
-// all of which must be absolute. Set SITE_URL to the production URL when deploying (see
-// .env.example). It isn't secret, but it is read on the server only, like everything here.
-//   1. SITE_URL, if set
-//   2. Vercel's production domain, if deployed there
+// The site's public address, used for metadataBase, canonical URLs, og:image tags, the sitemap
+// and JSON-LD, all of which must be absolute. It's read at BUILD time (the sitemap and the cards
+// are prerendered), so a change needs a new build. Not secret; read on the server only.
+//   1. SITE_URL, if set (a custom domain: set it for Production only)
+//   2. On Vercel, the deployment's own address: the production domain for a Production build,
+//      the preview's unique URL for a Preview build, so a preview's link cards point at the
+//      preview and not at production
 //   3. http://localhost:3000 for local development
-export const SITE_URL = (
-  process.env.SITE_URL ||
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL && `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`) ||
-  'http://localhost:3000'
-).replace(/\/$/, '');
+const vercelHost =
+  process.env.VERCEL_ENV === 'production' ? process.env.VERCEL_PROJECT_PRODUCTION_URL : process.env.VERCEL_URL;
+
+export const SITE_URL = (process.env.SITE_URL || (vercelHost && `https://${vercelHost}`) || 'http://localhost:3000').replace(/\/$/, '');
 
 export const SITE_NAME = 'Addis Eats';
 

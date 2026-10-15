@@ -1,5 +1,7 @@
 # Making Addis Eats Findable: SEO.md
 
+> **Since mini-project 19,** every price is printed by `etb()` in `lib/format.js`, so titles and cards now read "Special Kitfo · ETB 480". The examples below were recorded in mini-project 17, when they read "480 ETB". The JSON-LD price is still the bare number with `priceCurrency: ETB`.
+
 Metadata on every route, link previews, structured data, and a sitemap built from the dish records. Everything below was checked in the **page source** of a production build (`next build && next start`) with `SITE_URL=https://addis-eats.example`, a placeholder for the real address.
 
 ## Setup

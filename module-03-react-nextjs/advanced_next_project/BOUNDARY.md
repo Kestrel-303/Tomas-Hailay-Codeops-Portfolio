@@ -38,8 +38,8 @@ Every component under `app/`, which side it renders on, and why.
 | `app/checkout/CheckoutForm.jsx` | Needs `useActionState` (pending flag + returned field errors), the cart from `localStorage`, and payment-method selection state. Submits through the `placeOrder` server action — there is no `fetch`. |
 | `app/menu/MenuBrowser.jsx` | The menu's search box and paged list. Needs `useState` (the typed term), `useSearchParams` (the page and category), a debounce hook and SWR (`useMenuPage`, `useDishSearch`), all of which only run in the browser. |
 | `app/menu/DishList.jsx` | No `"use client"` of its own, but it is now rendered by `MenuBrowser`, so it ships in the client bundle. That's the price of swapping pages and search results without a server round trip. |
-| `app/orders/[id]/OrderTracker.jsx` | Polls the order with `useOrder()` (SWR) and re-renders the stepper as the status changes. |
-| `app/orders/[id]/OrderStatusBadge.jsx` | Reads the same `useOrder()` key as the tracker for the heading badge. It shares the cache entry, so there is no extra request. |
+| `app/orders/[id]/OrderTracker.jsx` | Holds the live order in `useState`, opens an `EventSource` in `useEffect` and closes it on unmount. It shows the status badge, the connection state and the text beside the map. (Mini-project 19: it replaced the SWR poll and the separate `OrderStatusBadge`.) |
+| `app/orders/[id]/DeliveryMap.jsx` | Leaflet needs `window` and the DOM. It is loaded with `next/dynamic` and `ssr: false`, so it never runs on the server. |
 | `app/AuthNav.jsx` | The header's account links. Fetches `/api/session` with SWR so the root layout doesn't read cookies (which would make every page dynamic). Showing the Kitchen link only to staff is cosmetic. |
 | `app/sign-in/SignInForm.jsx` | Needs `useActionState` for the pending label and the "wrong email or password" error. |
 | `app/orders/CancelOrderButton.jsx` | Needs `useActionState` for its pending label and error message. Hiding or showing it is cosmetic: `cancelOrder` does the real session + ownership check on the server. |

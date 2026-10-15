@@ -1,10 +1,6 @@
 // Every SWR key in the app is built here. Server components use the same builders, so a
 // key they seed as fallback data is byte-for-byte the key the client later asks for.
 
-export function orderKey(id) {
-  return `/api/orders/${encodeURIComponent(id)}`;
-}
-
 export function menuPageKey(category, page) {
   const params = new URLSearchParams();
   if (category && category !== 'All') params.set('category', category);

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { getDishById, getAllDishes } from '@/lib/dishes';
 import { DISH_PHOTO, dishPhotoAlt, dishPhotoSrc } from '@/lib/dish-photos';
 import { NO_INDEX, absoluteUrl } from '@/lib/site';
+import { etb } from '@/lib/format';
 import AddToCartButton from '../../AddToCartButton';
 
 export async function generateStaticParams() {
@@ -15,6 +16,10 @@ export async function generateStaticParams() {
 
 // Everything here comes from the dish record, so each dish page gets its own title and
 // description, and they can never disagree with what the page shows.
+// Every dish is known at build time, so any other id gets a real 404 straight away instead of
+// being rendered on demand (where loading.js streams first and notFound() lands in a 200).
+export const dynamicParams = false;
+
 export async function generateMetadata({ params }) {
   const { id } = await params;
   const dish = getDishById(id);
@@ -22,7 +27,7 @@ export async function generateMetadata({ params }) {
 
   const description = dishDescription(dish);
   return {
-    title: `${dish.name} · ${dish.priceFormatted}`,
+    title: `${dish.name} · ${etb(dish.price)}`,
     description,
     alternates: { canonical: `/menu/${dish.id}` },
     // og:image comes from ./opengraph-image.js (a 1200×630 card generated for this dish).
@@ -35,7 +40,7 @@ export async function generateMetadata({ params }) {
 // (so a very short first sentence like Doro Wat's still gives a full description), and only a
 // first sentence that is too long on its own is trimmed at a word. 160 characters at most.
 function dishDescription(dish) {
-  const facts = `${dish.priceFormatted}, ${dish.spiceLevel.replace(/[^\p{L}\p{N}\s-]/gu, '').trim().toLowerCase()}${dish.isFasting ? ', fasting-friendly' : ''}.`;
+  const facts = `${etb(dish.price)}, ${dish.spiceLevel.replace(/[^\p{L}\p{N}\s-]/gu, '').trim().toLowerCase()}${dish.isFasting ? ', fasting-friendly' : ''}.`;
   const room = 160 - facts.length - 1;
   const sentences = dish.description.match(/[^.!?]+[.!?]+/g)?.map((s) => s.trim()) ?? [dish.description];
 
@@ -58,7 +63,7 @@ function dishDescription(dish) {
 }
 
 // schema.org MenuItem for this dish. name and price are the same fields the page renders
-// ({dish.name}, {dish.priceFormatted} = `${dish.price} ETB`), so the structured data can't
+// ({dish.name}, etb(dish.price)), so the structured data can't
 // drift from what a visitor sees.
 function menuItemJsonLd(dish) {
   return {
@@ -130,7 +135,7 @@ export default async function DishDetailPage({ params }) {
               {dish.amharicName}
             </h2>
             <div style={{ fontSize: '1.8rem', fontWeight: '800', color: 'var(--accent-gold)' }}>
-              {dish.priceFormatted}
+              {etb(dish.price)}
             </div>
           </div>
         </div>
@@ -167,8 +172,8 @@ export default async function DishDetailPage({ params }) {
         </div>
 
         {/* Action Buttons */}
-        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '2rem' }}>
-          <AddToCartButton dish={dish} className="btn btn-primary" style={{ flex: 1, padding: '1rem' }} id="add-to-cart-btn">
+        <div className="dish-actions">
+          <AddToCartButton dish={dish} className="btn btn-primary" style={{ padding: '1rem' }} id="add-to-cart-btn">
             🛒 Add to Cart
           </AddToCartButton>
           <Link href="/checkout" className="btn btn-secondary" style={{ padding: '1rem 1.5rem' }} id="quick-checkout-btn">

@@ -192,3 +192,11 @@ document.cookie                                         // still ''
 - **In-memory storage:** sessions, orders and the revoked set are all in memory, so a server restart clears them.
 - **Deployed on Vercel:** each request can hit a different serverless instance with its own memory, so an order placed on one may be missing on the next request, and a sign-out revoked on one instance isn't known to the others. It's reliable on a single `next start` process. A shared store (Postgres or Redis) is the fix, and was a deliberate choice not to add here.
 - The kitchen can view orders but can't change them. Order statuses still advance on a timer.
+
+## Added in the final version (mini-projects 19–20)
+
+- **Double submits:** `disabled={pending}` alone let two clicks in the same instant place two orders. Checkout, cancel and sign-in now also use `onSubmit={useSubmitOnce(pending)}`, and the server remembers a `requestId` per checkout (or an `Idempotency-Key` header on `POST /api/orders`), returning the existing order for a repeat. Tested: one order for a double Enter, two simultaneous clicks, a touch double tap, and the same key sent three times.
+- **Live tracking stream** (`GET /api/orders/[id]/stream`): checks the session and the order's owner before opening. Signed out gets 401, someone else's order 404, both as JSON.
+- **CSV export** (`/orders/export.csv`): scoped to the signed-in account's own orders. Another customer's export never contains them.
+- **Missing secret:** without `SESSION_SECRET`, signed-out pages still load but sign-in fails with "SESSION_SECRET is missing or under 32 characters: set it in .env.local, or in the Vercel project for this environment." That's why signing in is the first check after a deploy.
+- **No secret in the browser:** the final build's `.next/static` and the 15 JavaScript files a browser downloads (fetched over HTTP by `scripts/check-live.mjs`) contain neither the secret's value nor the name `SESSION_SECRET`.

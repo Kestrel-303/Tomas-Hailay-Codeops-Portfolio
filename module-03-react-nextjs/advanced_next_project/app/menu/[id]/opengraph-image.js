@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { ImageResponse } from 'next/og';
 import { dishPhotoSrc } from '@/lib/dish-photos';
 import { getDishById } from '@/lib/dishes';
+import { etb } from '@/lib/format';
 
 // A 1200×630 link preview per dish, built from the dish record: what someone sees when a dish
 // link is pasted into a group chat. It overrides the site-wide card for /menu/[id].
@@ -18,7 +19,7 @@ export async function generateImageMetadata({ params }) {
       id: 'card',
       size,
       contentType: 'image/png',
-      alt: dish ? `${dish.name}, ${dish.priceFormatted}, at Addis Eats` : 'Addis Eats',
+      alt: dish ? `${dish.name}, ${etb(dish.price)}, at Addis Eats` : 'Addis Eats',
     },
   ];
 }
@@ -50,7 +51,7 @@ export default async function Image({ params }) {
             )}
           </div>
           <div style={{ fontSize: 26, color: '#b9b2a6', lineHeight: 1.35 }}>{blurb.length > 120 ? `${blurb.slice(0, 117).replace(/\s+\S*$/, '')}…` : blurb}</div>
-          <div style={{ fontSize: 46, fontWeight: 800, color: '#e3a54b' }}>{dish.priceFormatted}</div>
+          <div style={{ fontSize: 46, fontWeight: 800, color: '#e3a54b' }}>{etb(dish.price)}</div>
         </div>
       </div>
     ),

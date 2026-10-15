@@ -1,20 +1,20 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import { getOrderById, toOwnerOrder } from '@/lib/orders';
+import { getOrderById } from '@/lib/orders';
 import { getSession } from '@/lib/session';
 import { NO_INDEX } from '@/lib/site';
-import OrderStatusBadge from './OrderStatusBadge';
+import { toTrackedOrder } from '@/lib/tracking';
 import OrderTracker from './OrderTracker';
 
 export const metadata = {
-  title: 'Order status',
-  description: 'Live status of your Addis Eats order, from placed to out for delivery to delivered, updating every few seconds.',
+  title: 'Track your order',
+  description: 'Live status of your Addis Eats order, with a map of the courier and the same details written out beside it.',
   robots: NO_INDEX,
 };
 
-// Server-rendered: the order is read straight from the store, so the status is already in
-// the HTML. Both client components get it as fallbackData (no spinner on first paint) and
-// then poll the same SWR key, which SWR turns into a single request every 5s.
+// Server-rendered: the order and the courier's position are read straight from the store, so
+// the status, the delivery details and the map's placeholder are all in the first HTML.
+// OrderTracker starts from that snapshot, then follows /api/orders/:id/stream.
 export default async function OrderStatusPage({ params }) {
   const { id } = await params;
 
@@ -28,22 +28,17 @@ export default async function OrderStatusPage({ params }) {
     notFound();
   }
 
-  const initialOrder = toOwnerOrder(order);
-
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+    <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
       <div style={{ marginBottom: '1.5rem' }}>
         <Link href="/orders" className="btn btn-secondary" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}>
           &larr; My Orders
         </Link>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
-        <h1 style={{ fontSize: '2.2rem', fontWeight: '800' }}>Order {initialOrder.id}</h1>
-        <OrderStatusBadge orderId={initialOrder.id} fallbackData={initialOrder} />
-      </div>
+      <h1 style={{ fontSize: '2.2rem', fontWeight: '800', marginBottom: '1.25rem' }}>Order {order.id}</h1>
 
-      <OrderTracker orderId={initialOrder.id} fallbackData={initialOrder} />
+      <OrderTracker initialOrder={toTrackedOrder(order)} />
     </div>
   );
 }

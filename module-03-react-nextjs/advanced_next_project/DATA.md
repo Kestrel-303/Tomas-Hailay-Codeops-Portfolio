@@ -1,31 +1,16 @@
-# Data in Addis Eats
+# Client-side data in Addis Eats
 
-Server components read the data for every first paint. SWR takes over in the browser only where data must stay fresh or react to typing.
+Every client query lives in `lib/queries.js`, every key is built in `lib/query-keys.js`, and every request goes through the one fetcher in `lib/fetcher.js` (registered globally with `<SWRConfig value={{ fetcher }}>` in `app/Providers.jsx`). The fetcher throws on any non-OK response, with `status` and our API's error `code` attached, so a 401 or 404 reaches SWR as an `error` and not as "data".
 
-## Server reads
+Server components still do every first paint. SWR only takes over in the browser.
 
-These run inside server components, route handlers and server actions. None of them is a client query, and none ships its raw data to the browser beyond what the page renders.
-
-| Read | Where | When it runs | Scoped by |
-|---|---|---|---|
-| `getAllDishes()` / `getDishById(id)` | `/`, `/menu/[id]`, `generateMetadata`, `opengraph-image`, `sitemap.js` | Build time (static and SSG pages) | Public data |
-| `getMenuPage(category, page)` | `/menu` (then seeds SWR, below) | Per request, cached by ISR for 60s | Public data |
-| `getOrdersByOwner(session.id)` | `/orders` | Every request (reads the session cookie) | The id inside the **verified cookie**, never a URL or form value |
-| `getOrderById(id)` + `ownerId === session.id` | `/orders/[id]` (then seeds SWR, below), `GET /api/orders/[id]`, `cancelOrder` | Every request | Ownership check. Someone else's order looks exactly like a missing one (404). |
-| `getAllOrders()` | `/kitchen` | Every request | Staff role, checked on the server |
-
-## Client queries (SWR)
-
-Every client query lives in `lib/queries.js`, except the header's session check (last row below). Every key is built in `lib/query-keys.js`.
-
-Every request goes through the one fetcher in `lib/fetcher.js`, registered globally with `<SWRConfig value={{ fetcher }}>` in `app/Providers.jsx`. The fetcher throws on any non-OK response, with `status` and our API's error `code` attached, so a 401 or 404 reaches SWR as an `error` and not as "data".
+## Every query
 
 | Query (hook) | Used by | Key | Refresh rule | Why |
 |---|---|---|---|---|
-| `useOrder(id, fallbackData)` | `app/orders/[id]/OrderTracker.jsx` and `OrderStatusBadge.jsx` | `/api/orders/<id>` | `refreshInterval` 5s while the status is `placed`, `preparing` or `out-for-delivery`, then `0` (stop) once it is `delivered` or `cancelled`. `dedupingInterval` is the SWR default of 2s. Revalidates on focus. | The status changes on its own within seconds, so it has to be polled. 5s is quick enough to feel live and slow enough to be cheap, and a final status can never change again, so polling it would be wasted requests. |
+| ~~`useOrder(id, fallbackData)`~~ *removed in mini-project 19: the tracker follows a Server-Sent Events stream now, see TRACKING.md* | `app/orders/[id]/OrderTracker.jsx` and `OrderStatusBadge.jsx` | `/api/orders/<id>` | `refreshInterval` 5s while the status is `placed`, `preparing` or `out-for-delivery`, then `0` (stop) once it is `delivered` or `cancelled`. `dedupingInterval` is the SWR default of 2s. Revalidates on focus. | The status changes on its own within seconds, so it has to be polled. 5s is quick enough to feel live and slow enough to be cheap, and a final status can never change again, so polling it would be wasted requests. |
 | `useMenuPage(category, page)` | `app/menu/MenuBrowser.jsx` (paged list) | `/api/menu?category=<c>&page=<n>` (`category` left out for All) | `dedupingInterval` 60s, `revalidateOnFocus: false`, `keepPreviousData: true`, no polling. | The menu only changes on deploy or the 60s ISR window, so a page fetched in the last minute is trusted, and flicking back to it costs no request. |
 | `useDishSearch(term)` | `app/menu/MenuBrowser.jsx` (search box) | `/api/dishes/search?q=<term>`, or **`null`** when the debounced term is empty | `dedupingInterval` 60s, `revalidateOnFocus: false`, `keepPreviousData: true`, no polling. | Same data as the menu, so the same 60s freshness. A null key means an empty box sends nothing. |
-| `useSWR('/api/session')` | `app/AuthNav.jsx` (header: Sign In / My Orders / Kitchen / Sign Out) | `/api/session` | SWR defaults, plus a `mutate()` on every route change. | Reading cookies in the root layout would make *every* page render per request, including the static home and dish pages. So the header asks the API instead, and re-checks after each navigation, since sign-in and sign-out both end in a redirect. It's for display only: every page, action and handler checks `getSession()` itself (see AUTH.md). |
 
 ### About `staleTime`
 

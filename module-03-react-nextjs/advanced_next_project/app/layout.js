@@ -5,6 +5,7 @@ import { SITE_NAME, SITE_URL } from '@/lib/site';
 import Providers from './Providers';
 import AuthNav from './AuthNav';
 import CartNavLink from './CartNavLink';
+import SiteNav from './SiteNav';
 import './globals.css';
 
 // The site font, replacing a Google Fonts @import in globals.css. next/font downloads it at build
@@ -41,6 +42,11 @@ export default function RootLayout({ children }) {
     <html lang="en" className={outfit.variable}>
       <body>
         <Providers>
+          {/* The first Tab stop on every page: past the header, straight to the content. Off-screen
+              until it has keyboard focus. */}
+          <a href="#main" className="skip-link">
+            Skip to main content
+          </a>
           <div className="app-container">
             <header className="site-header">
               <Link href="/" className="brand-logo" id="nav-brand-link">
@@ -48,7 +54,7 @@ export default function RootLayout({ children }) {
                 <span>Addis<span className="highlight">Eats</span></span>
               </Link>
 
-              <nav>
+              <SiteNav>
                 <ul className="nav-links">
                   <li>
                     <Link href="/" className="nav-link" id="nav-home-link">
@@ -70,10 +76,13 @@ export default function RootLayout({ children }) {
                   </li>
                   <AuthNav />
                 </ul>
-              </nav>
+              </SiteNav>
             </header>
 
-            <main className="main-content">{children}</main>
+            {/* tabIndex -1 lets the skip link move focus here, so the next Tab carries on from the content. */}
+            <main id="main" className="main-content" tabIndex={-1}>
+              {children}
+            </main>
 
             <footer className="site-footer">
               <p>© {new Date().getFullYear()} Addis Eats. Built with Next.js App Router (File-system Routing & Colocated Components).</p>

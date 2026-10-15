@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { getOrdersByOwner } from '@/lib/orders';
 import { getSession } from '@/lib/session';
 import { NO_INDEX } from '@/lib/site';
+import { etb, relative, when } from '@/lib/format';
 import CancelOrderButton from './CancelOrderButton';
 
 export const metadata = {
@@ -19,18 +20,32 @@ export default async function OrdersPage() {
   // Scoped to session.id from the verified cookie. There is no id in the URL or a form to
   // change, so there is no way to ask this page for another account's orders.
   const orders = getOrdersByOwner(session.id);
+  const now = Date.now();
 
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto' }}>
       <h1 style={{ fontSize: '2.2rem', fontWeight: '800', marginBottom: '0.25rem' }}>My Orders</h1>
-      <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>
+      <p style={{ color: 'var(--text-secondary)', marginBottom: orders.length ? '1rem' : '2rem' }}>
         Signed in as {session.name}. Orders can be cancelled until the kitchen starts on them.
       </p>
+      {orders.length > 0 && (
+        // A plain link: the route answers with Content-Disposition: attachment, so the browser
+        // saves the file instead of opening it. Only this account's orders are in it.
+        <a href="/orders/export.csv" className="btn btn-secondary" download style={{ marginBottom: '2rem' }} id="orders-export-csv">
+          ⬇ Export order history (CSV, {orders.length} {orders.length === 1 ? 'order' : 'orders'})
+        </a>
+      )}
 
       {orders.length === 0 ? (
+        // What a brand-new customer sees: what this page is for and how to get started, instead
+        // of an empty list.
         <div className="state-container">
           <div className="state-icon">🧾</div>
-          <h3 className="state-title">No orders yet</h3>
+          <h2 className="state-title">No orders yet</h2>
+          <p className="state-text">
+            When you place an order, it shows up here with its status, from placed to delivered. You can cancel it until
+            the kitchen starts cooking.
+          </p>
           <Link href="/menu" className="btn btn-primary" id="orders-empty-menu-link">
             Browse the Menu
           </Link>
@@ -51,10 +66,13 @@ export default async function OrdersPage() {
                 <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
                   {order.items.map((item) => `${item.name} × ${item.qty}`).join(', ')}
                 </div>
+                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.3rem' }}>
+                  <time dateTime={order.placedAt}>{when(order.placedAt)}</time> ({relative(order.placedAt, now)})
+                </div>
               </div>
               <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '1.1rem', fontWeight: '700', color: 'var(--accent-gold)' }}>{order.total} ETB</div>
-                <Link href={`/orders/${order.id}`} style={{ display: 'block', fontSize: '0.8rem', color: 'var(--accent-gold)', marginTop: '0.35rem' }}>
+                <div style={{ fontSize: '1.1rem', fontWeight: '700', color: 'var(--accent-gold)' }}>{etb(order.total)}</div>
+                <Link href={`/orders/${order.id}`} className="track-link">
                   Track →
                 </Link>
                 {order.status === 'placed' && <CancelOrderButton orderId={order.id} />}

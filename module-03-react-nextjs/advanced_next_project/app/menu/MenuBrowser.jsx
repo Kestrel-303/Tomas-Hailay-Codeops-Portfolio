@@ -54,6 +54,14 @@ function MenuResults() {
           type="search"
           value={term}
           onChange={(event) => setTerm(event.target.value)}
+          onKeyDown={(event) => {
+            // Escape empties the box and brings the paged menu back; focus stays in the box.
+            if (event.key === 'Escape' && term) {
+              event.preventDefault();
+              setTerm('');
+            }
+          }}
+          aria-describedby="dish-search-hint"
           placeholder="Try “wat”, “tibs” or “ክትፎ”"
           autoComplete="off"
           style={{
@@ -63,8 +71,12 @@ function MenuResults() {
             background: 'rgba(255, 255, 255, 0.05)',
             border: '1px solid var(--border-color)',
             color: 'var(--text-primary)',
+            minHeight: '44px',
           }}
         />
+        <p id="dish-search-hint" className="search-hint">
+          Results appear as you type. Esc clears the search.
+        </p>
       </div>
 
       {isSearching ? (

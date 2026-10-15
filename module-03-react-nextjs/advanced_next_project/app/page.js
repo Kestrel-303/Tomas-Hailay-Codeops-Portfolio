@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { getAllDishes } from '@/lib/dishes';
 import { DISH_CARD_SIZES, DISH_PHOTO, dishPhotoAlt, dishPhotoSrc } from '@/lib/dish-photos';
+import { etb } from '@/lib/format';
 import AddToCartButton from './AddToCartButton';
 
 // title.absolute skips the "%s · Addis Eats" template: the home page leads with the brand.
@@ -20,16 +21,19 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="hero">
         <Image
-          src="https://upload.wikimedia.org/wikipedia/commons/9/98/Injera%2C_Fasting_Food%2C_Ethiopia_%2811286899826%29.jpg"
+          // Served from public/images (a 2400px copy of the Wikimedia Commons original). Hotlinked, the
+          // image optimizer's requests to upload.wikimedia.org were refused with 429 Too Many Requests,
+          // which left a broken image on wide screens.
+          src="/images/hero-injera.jpg"
           alt="A fasting platter on injera: yellow split-pea stew, collard greens, beetroot and potato-carrot alicha"
-          width={6016}
-          height={4016}
+          width={2400}
+          height={1602}
           // Full hero width: the 1200px page minus main and hero padding (5rem in total).
           sizes="(max-width: 1200px) calc(100vw - 5rem), 1120px"
           className="hero-image"
-          // No `preload` (Next 16's `priority`) here any more, on purpose. The LCP element on this
-          // page is the h1, not this photo, and preloading the photo put ~50 KB on the critical
-          // path ahead of the text: removing it took Lighthouse from 76 to 91 (see PERF.md).
+          // No `preload` (Next 16's `priority`) here, on purpose. The LCP element on this page is the
+          // h1, not this photo, and preloading the photo put ~50 KB on the critical path ahead of
+          // the text: removing it took Lighthouse from 76 to 91 (see PERF.md).
         />
         <p className="hero-credit">
           Photo:{' '}
@@ -57,7 +61,7 @@ export default function HomePage() {
 
       {/* Featured Dishes Section */}
       <section style={{ marginTop: '3rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+        <div className="section-head">
           <div>
             <h2 style={{ fontSize: '1.8rem', fontWeight: '700' }}>Popular Signature Dishes</h2>
             <p style={{ color: 'var(--text-secondary)' }}>Handpicked favorites from our traditional kitchen</p>
@@ -84,7 +88,7 @@ export default function HomePage() {
                 <p className="dish-desc">{dish.description}</p>
 
                 <div className="dish-footer">
-                  <span className="dish-price">{dish.priceFormatted}</span>
+                  <span className="dish-price">{etb(dish.price)}</span>
                   <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
                     <Link href={`/menu/${dish.id}`} className="btn btn-secondary" style={{ padding: '0.5rem 0.9rem', fontSize: '0.875rem' }} id={`featured-view-${dish.id}`}>
                       View Details
