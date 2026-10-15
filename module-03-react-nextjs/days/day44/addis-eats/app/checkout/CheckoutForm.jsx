@@ -1,0 +1,152 @@
+"use client";
+
+import Link from "next/link";
+import { useActionState, useEffect, useRef, useState } from "react";
+import { useCart } from "../../lib/cart-context";
+import { areaOptions } from "../../lib/order-schema";
+import { etb } from "../../lib/format";
+import { useSubmitOnce } from "../../lib/use-submit-once";
+import { placeOrder } from "../orders/actions";
+
+const initialState = { status: null };
+
+export default function CheckoutForm() {
+  const { items, subtotal, clearCart } = useCart();
+  const [state, formAction, pending] = useActionState(placeOrder, initialState);
+  const submitOnce = useSubmitOnce(pending);
+  // One id per visit to checkout, made in the browser after hydration (making it during render
+  // would give the server HTML and the browser different ids). The server places at most one
+  // order per id.
+  const [requestId, setRequestId] = useState("");
+  useEffect(() => setRequestId(crypto.randomUUID()), []);
+
+  // The submit button is disabled while pending and the form remounts with each result, so the
+  // keyboard focus would otherwise drop back to <body>. Send it to the first field to fix, or to
+  // the error message.
+  const formRef = useRef(null);
+  useEffect(() => {
+    if (state.status === null || state.status === 201) return;
+    const target = formRef.current?.querySelector('[aria-invalid="true"]') ?? formRef.current?.querySelector('[role="alert"]');
+    target?.focus();
+  }, [state]);
+
+  useEffect(() => {
+    if (state.status === 201) clearCart();
+    // clearCart is recreated every render; we only want this to run once per new result.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state]);
+
+  // Branch on the status code exactly like the Day 33 fetch did.
+  let fieldErrors = {};
+  let formError = "";
+  switch (state.status) {
+    case 201:
+      return (
+        <div className="card">
+          <span className="eyebrow">Order placed</span>
+          <h2 style={{ fontSize: "1.25rem", margin: "0.25rem 0 0.5rem" }}>Thanks, {state.order.customer.name}!</h2>
+          <p className="page-subtitle">
+            Order <strong>{state.order.id}</strong> — {etb(state.order.total)}, delivering to{" "}
+            {state.order.customer.area}.
+          </p>
+          <div className="actions-row">
+            <Link href={`/orders/${state.order.id}`} className="btn btn-primary">
+              Track this order
+            </Link>
+            <Link href="/menu" className="btn btn-ghost">
+              Back to menu
+            </Link>
+          </div>
+        </div>
+      );
+    case 422:
+      fieldErrors = state.error.fieldErrors;
+      formError = state.error.message;
+      break;
+    case null:
+      break;
+    default:
+      formError = state.error?.message ?? "Something went wrong. Please try again.";
+  }
+
+  if (items.length === 0) {
+    return (
+      <div className="card">
+        <p className="page-subtitle">Your cart is empty.</p>
+        <Link href="/menu" className="btn btn-primary" style={{ marginTop: "1rem" }}>
+          Browse the menu
+        </Link>
+      </div>
+    );
+  }
+
+  const values = state.values ?? { name: "", phone: "", area: "Bole", notes: "" };
+
+  return (
+    <div className="card">
+      <ul style={{ margin: "0 0 1rem", paddingLeft: "1.1rem" }}>
+        {items.map((item) => (
+          <li key={item.id}>
+            {item.name} × {item.quantity} — {etb(item.price * item.quantity)}
+          </li>
+        ))}
+      </ul>
+      <p style={{ fontWeight: 700, marginBottom: "1.25rem" }}>Total: {etb(subtotal)}</p>
+
+      {/* key remounts the fields so a 422 response refills them with what was submitted */}
+      <form ref={formRef} action={formAction} onSubmit={submitOnce} noValidate key={JSON.stringify(state)} className="order-form">
+        <input type="hidden" name="requestId" value={requestId} />
+        <input type="hidden" name="items" value={JSON.stringify(items.map(({ id, quantity }) => ({ id, quantity })))} />
+
+        <Field label="Full name" name="name" error={fieldErrors.name}>
+          <input id="checkout-name" name="name" type="text" aria-invalid={Boolean(fieldErrors.name)} aria-describedby={fieldErrors.name ? "checkout-name-error" : undefined} defaultValue={values.name} placeholder="Your name" />
+        </Field>
+
+        <Field label="TeleBirr phone" name="phone" error={fieldErrors.phone}>
+          <input id="checkout-phone" name="phone" type="tel" aria-invalid={Boolean(fieldErrors.phone)} aria-describedby={fieldErrors.phone ? "checkout-phone-error" : undefined} defaultValue={values.phone} placeholder="10-digit phone number" />
+        </Field>
+
+        <Field label="Delivery area" name="area" error={fieldErrors.area}>
+          <select id="checkout-area" name="area" aria-invalid={Boolean(fieldErrors.area)} aria-describedby={fieldErrors.area ? "checkout-area-error" : undefined} defaultValue={values.area}>
+            {areaOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        </Field>
+
+        <Field label="Notes" name="notes">
+          <textarea id="checkout-notes" name="notes" defaultValue={values.notes} placeholder="Optional delivery notes" rows="3" />
+        </Field>
+
+        {fieldErrors.items && <p className="form-error">{fieldErrors.items}</p>}
+        {formError && (
+          <p role="alert" className="form-error" tabIndex={-1}>
+            {formError}
+          </p>
+        )}
+
+        {/* Disabled while pending, so it looks and acts unavailable; useSubmitOnce covers the
+            moment before that re-render, and requestId covers anything that still gets through. */}
+        <button type="submit" className="btn btn-primary btn-block" disabled={pending}>
+          {pending ? "Placing order..." : `Place order — ${etb(subtotal)}`}
+        </button>
+      </form>
+    </div>
+  );
+}
+
+function Field({ label, name, error, children }) {
+  return (
+    <div className="form-field">
+      <label htmlFor={`checkout-${name}`}>{label}</label>
+      {children}
+      {error && (
+        <small id={`checkout-${name}-error`} role="alert" className="form-error">
+          {error}
+        </small>
+      )}
+    </div>
+  );
+}
